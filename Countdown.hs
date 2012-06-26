@@ -40,7 +40,7 @@ generateTerms ns = generateTerms' (length ns) (sort ns)
 generateTerms' l ns = takeNumber ++ pluss ++ minuss ++ mults ++ divs
   where takeNumber = do
           n <- ns
-          return (delete n ns, TNum n)
+          return (delete n ns, tNum n)
         getArgs = do
           guard (l >= 2)
           (ns' , left)  <- generateTerms' (l-1) ns
