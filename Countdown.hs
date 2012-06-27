@@ -47,14 +47,15 @@ generateTerms' l ns = takeNumber ++ terms
           (ns' , left)  <- generateTerms' (l-1) ns
           (ns'', right) <- generateTerms' (l-1) ns'
           let pluss = do
-                guard (eval left < eval right)
+                guard (eval left <= eval right)
                 guard (eval left /= 0 && eval right /= 0)
                 return $ (ns'', tPlus left right)
               minuss = do
                 guard (eval right /= 0)
+                guard (eval left /= eval right)
                 return $ (ns'', tMinus left right)
               mults = do
-                guard (eval left < eval right)
+                guard (eval left <= eval right)
                 guard (eval left /= 1 && eval right /= 1)
                 return $ (ns'', tMult left right)
               divs = do
