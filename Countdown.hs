@@ -37,33 +37,30 @@ tNum   a    = TNum  a
 -- (++) and delete are incredibly slow operations
 -- we could improve speed by a large factor using a better data type.
 generateTerms ns = generateTerms' (length ns) (sort ns)
-generateTerms' l ns = takeNumber ++ pluss ++ minuss ++ mults ++ divs
+generateTerms' l ns = takeNumber ++ terms
   where takeNumber = do
           n <- ns
           return (delete n ns, tNum n)
-        getArgs = do
+
+        terms = do
           guard (l >= 2)
           (ns' , left)  <- generateTerms' (l-1) ns
           (ns'', right) <- generateTerms' (l-1) ns'
-          return (ns'', left, right)
-        pluss = do
-          (ns'', left, right) <- getArgs
-          guard (eval left < eval right)
-          guard (eval left /= 0 && eval right /= 0)
-          return $ (ns'', tPlus left right)
-        minuss = do
-          (ns'', left, right) <- getArgs
-          guard (eval right /= 0)
-          return $ (ns'', tMinus left right)
-        mults = do
-          (ns'', left, right) <- getArgs
-          guard (eval left < eval right)
-          guard (eval left /= 1 && eval right /= 1)
-          return $ (ns'', tMult left right)
-        divs = do
-          (ns'', left, right) <- getArgs
-          guard (eval right /= 0 && eval right /= 1)
-          return $ (ns'', tDiv left right)
+          let pluss = do
+                guard (eval left < eval right)
+                guard (eval left /= 0 && eval right /= 0)
+                return $ (ns'', tPlus left right)
+              minuss = do
+                guard (eval right /= 0)
+                return $ (ns'', tMinus left right)
+              mults = do
+                guard (eval left < eval right)
+                guard (eval left /= 1 && eval right /= 1)
+                return $ (ns'', tMult left right)
+              divs = do
+                guard (eval right /= 0 && eval right /= 1)
+                return $ (ns'', tDiv left right)
+          pluss ++ minuss ++ mults ++ divs
 
 
 run ns target = filter pred $ generateTerms ns
