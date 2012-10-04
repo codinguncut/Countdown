@@ -1,4 +1,4 @@
--- Copyright (c) 2012 Jonas Tullus
+-- Copyright (c) 2012 Johannes Ahlmann
 -- Licensed under MIT license
 -- Available on GitHub at http://github.com/jethr0/Countdown
 -- You can find the task at: http://www.rubyquiz.com/quiz7.html
